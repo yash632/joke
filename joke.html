@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Joke Generator 😆</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0f7fa;
+      text-align: center;
+      margin-top: 50px;
+    }
+    select, button {
+      margin: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background: #26a69a;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #00897b;
+    }
+    #jokeBox {
+      margin-top: 30px;
+      font-size: 18px;
+      min-height: 60px;
+      padding: 15px 10px;
+      background: #fffde7;
+      border-radius: 5px;
+      display: inline-block;
+      max-width: 60%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+  <h2>Joke Generator 😆</h2>
+  <select id="categorySelect">
+    <option value="">Any Category</option>
+    <option value="Programming">Programming</option>
+    <option value="Misc">Miscellaneous</option>
+    <option value="Dark">Dark Humor</option>
+  </select>
+  <button onclick="getJoke()">Tell Me a Joke</button>
+  <div id="jokeBox"></div>
+  <br>
+  <button onclick="copyJoke()">Copy Joke</button>
+  <script>
+    async function getJoke() {
+      const category = document.getElementById("categorySelect").value;
+      const url = category
+        ? `https://v2.jokeapi.dev/joke/${category}?type=single`
+        : "https://v2.jokeapi.dev/joke/Any?type=single";
+      document.getElementById("jokeBox").textContent = "Loading...";
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        document.getElementById("jokeBox").textContent =
+          data && data.joke ? data.joke : "No joke found!";
+      } catch (error) {
+        document.getElementById("jokeBox").textContent =
+          "Oops! Kuchh galat ho gaya. Try again.";
+      }
+    }
+    function copyJoke() {
+      const joke = document.getElementById("jokeBox").textContent;
+      if(joke && joke !== "Loading..." && joke !== "No joke found!") {
+        navigator.clipboard.writeText(joke);
+        alert("Joke copied to clipboard! 😂");
+      } else {
+        alert("Pehle joke lao, phir copy karo!");
+      }
+    }
+  </script>
+</body>
+</html>
